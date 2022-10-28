@@ -17,6 +17,10 @@ public class Board {
     private int viewCnt;
     private Date regDate;
 
+    //커스텀 필드
+    private String shortTitle; //줄임 제목
+    private String prettierDate;
+
     private Board(Builder builder){
 
         this.boardNo= builder.boardNo;
