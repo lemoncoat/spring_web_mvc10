@@ -19,15 +19,30 @@ public class BoardService {
     // 전체 조회 중간처리
     public List<Board> getList() {
         List<Board> boardList = repository.findAll();
-
-        for (Board board : boardList) {
-            subStringTitle(board);
-            convertDateFormat(board);
-        }
+        processBoardList(boardList);
         return boardList;
     }
 
-        //날짜 포맷팅 처리
+    private void processBoardList(List<Board> boardList) {
+        for (Board board : boardList) {
+            subStringTitle(board);
+            convertDateFormat(board);
+            isNewArticle(board);
+        }
+    }
+
+    //신규 게시물 new 마크 처리(3시간 이내 작성된 게시물)
+    private void isNewArticle(Board board) {
+        long regDate = board.getRegDate().getTime();//게시물 작성시간(밀리초)
+        long nowDate = System.currentTimeMillis();//현재시간(밀리초)
+        long diff = nowDate-regDate; //작성후 지난 시간(밀리초)
+        long limit= 3*60*60*1000; //3시간을 밀리초로 변환
+        if(diff<=limit){
+            board.setNewArticle(true);
+        }
+    }
+
+    //날짜 포맷팅 처리
     private void convertDateFormat(Board board) {
         Date regDate = board.getRegDate();
         SimpleDateFormat simpleDateFormat
@@ -36,7 +51,7 @@ public class BoardService {
     }
 
 
-        //게시물 제목 줄임 처리
+    //게시물 제목 줄임 처리
     private void subStringTitle(Board board) {
         //만약에 글제목이 6글자 이상이면 6글자 까지만 보여주고 뒤에 ...처리
         String title = board.getTitle();
