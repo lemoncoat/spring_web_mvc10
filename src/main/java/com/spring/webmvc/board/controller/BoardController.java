@@ -55,6 +55,7 @@ public class BoardController {
         return"board/write";
     }
 
+
     //게시물 등록 요청
     @PostMapping("/write")
     public String write(Board board, RedirectAttributes ra){
